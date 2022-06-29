@@ -13,7 +13,7 @@ class Equipment extends Model
     protected $guarded = false;
     protected $table = 'equipment';
 
-    public function equipmentTypes () {
+    public function equipmentType () {
         return $this->belongsTo(EquipmentType::class, 'equipment_types_id', 'id');
     }
 }

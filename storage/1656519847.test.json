@@ -1,0 +1,17 @@
+[
+  {
+    "equipment_types_id": "1",
+    "serial_number": "QWERTASDFG",
+    "note": "note1"
+  },
+    {
+        "equipment_types_id": "2",
+        "serial_number": "ZXCVBNMPOI",
+        "note": "note2"
+    },
+    {
+        "equipment_types_id": "3",
+        "serial_number": "ASDFGPOIUY",
+        "note": "note3"
+    }
+]

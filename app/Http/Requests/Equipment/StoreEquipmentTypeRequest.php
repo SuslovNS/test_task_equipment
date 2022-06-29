@@ -25,7 +25,7 @@ class StoreEquipmentTypeRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'mask' => 'required|string',
+            'mask' => 'required|string|min:10',
         ];
     }
 }

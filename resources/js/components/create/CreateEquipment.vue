@@ -16,9 +16,22 @@
             <div class="mb-3">
                 <input type="text" v-model="note" placeholder="Примечание" class="form-control">
             </div>
+            <div v-if="errors" v-for="error in errors">
+                <div class="m-alert m-alert--outline alert-danger alert-dismissible" role="alert">
+                    <span>
+                        {{error}}
+                    </span>
+                </div>
+            </div>
             <div class="mb-3">
                 <input :disabled="!isDisabled" @click.prevent="store" type="submit" value="Добавить" class="btn btn-primary">
             </div>
+            <div class="container">
+                    <input type="file" @change="onChange">
+                    <input type="submit" @click.prevent="upload" value="Загрузить Json">
+
+            </div>
+
         </div>
     </div>
 </div>
@@ -34,6 +47,9 @@ export default {
             equiptype: null,
             serial_number: null,
             note: null,
+            file: '',
+            errors: []
+
         }
     },
 
@@ -47,13 +63,37 @@ export default {
                 .then( res => {
                     this.$router.push({ name:'show.equipment'})
                 })
+                .catch((error) => {
+                    this.errors = error.response.data.errors.serial_number;
+                    console.log(errors);
+                })
         },
         getEquiptype() {
             axios.get('/api/equipment-type/')
                 .then(res => {
                     this.equiptype = res.data.data
                 })
+
         },
+        onChange(e){
+            console.log('selected file', e.target.files[0])
+            this.file = e.target.files[0];
+        },
+        upload(){
+            let fd = new FormData();
+            fd.append('file', this.file);
+            axios.post('api/equipment/upload', fd,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(res => {
+                    this.$router.push({ name:'show.equipment'})
+                    console.log(res.data)
+                }).catch(err=>console.log(err))
+        },
+
     },
 
     computed: {

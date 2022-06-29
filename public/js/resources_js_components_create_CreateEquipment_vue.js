@@ -37,6 +37,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CreateEquipment",
   data: function data() {
@@ -44,7 +57,9 @@ __webpack_require__.r(__webpack_exports__);
       equipment_types_id: null,
       equiptype: null,
       serial_number: null,
-      note: null
+      note: null,
+      file: '',
+      errors: []
     };
   },
   mounted: function mounted() {
@@ -62,6 +77,9 @@ __webpack_require__.r(__webpack_exports__);
         _this.$router.push({
           name: 'show.equipment'
         });
+      })["catch"](function (error) {
+        _this.errors = error.response.data.errors.serial_number;
+        console.log(errors);
       });
     },
     getEquiptype: function getEquiptype() {
@@ -69,6 +87,29 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get('/api/equipment-type/').then(function (res) {
         _this2.equiptype = res.data.data;
+      });
+    },
+    onChange: function onChange(e) {
+      console.log('selected file', e.target.files[0]);
+      this.file = e.target.files[0];
+    },
+    upload: function upload() {
+      var _this3 = this;
+
+      var fd = new FormData();
+      fd.append('file', this.file);
+      axios.post('api/equipment/upload', fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (res) {
+        _this3.$router.push({
+          name: 'show.equipment'
+        });
+
+        console.log(res.data);
+      })["catch"](function (err) {
+        return console.log(err);
       });
     }
   },
@@ -167,119 +208,165 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", [
-      _c("div", { staticClass: "w-25" }, [
-        _c("div", { staticClass: "mb-3" }, [
-          _c(
-            "select",
-            {
+      _c(
+        "div",
+        { staticClass: "w-25" },
+        [
+          _c("div", { staticClass: "mb-3" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.equipment_types_id,
+                    expression: "equipment_types_id",
+                  },
+                ],
+                on: {
+                  change: function ($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function (o) {
+                        return o.selected
+                      })
+                      .map(function (o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.equipment_types_id = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  },
+                },
+              },
+              [
+                _c("option", { attrs: { disabled: "" } }, [
+                  _vm._v("Выберите тип оборудования"),
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.equiptype, function (type) {
+                  return _c("option", { domProps: { value: type.id } }, [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(type.name) +
+                        "\n                    "
+                    ),
+                  ])
+                }),
+              ],
+              2
+            ),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "mb-3" }, [
+            _c("input", {
               directives: [
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.equipment_types_id,
-                  expression: "equipment_types_id",
+                  value: _vm.serial_number,
+                  expression: "serial_number",
                 },
               ],
+              staticClass: "form-control",
+              attrs: { type: "text", placeholder: "Введите серийный номер" },
+              domProps: { value: _vm.serial_number },
               on: {
-                change: function ($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function (o) {
-                      return o.selected
-                    })
-                    .map(function (o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.equipment_types_id = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
+                input: function ($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.serial_number = $event.target.value
                 },
               },
-            },
-            [
-              _c("option", { attrs: { disabled: "" } }, [
-                _vm._v("Выберите тип оборудования"),
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.equiptype, function (type) {
-                return _c("option", { domProps: { value: type.id } }, [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(type.name) +
-                      "\n                    "
+            }),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "mb-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.note,
+                  expression: "note",
+                },
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text", placeholder: "Примечание" },
+              domProps: { value: _vm.note },
+              on: {
+                input: function ($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.note = $event.target.value
+                },
+              },
+            }),
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.errors, function (error) {
+            return _vm.errors
+              ? _c("div", [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "m-alert m-alert--outline alert-danger alert-dismissible",
+                      attrs: { role: "alert" },
+                    },
+                    [
+                      _c("span", [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(error) +
+                            "\n                    "
+                        ),
+                      ]),
+                    ]
                   ),
                 ])
-              }),
-            ],
-            2
-          ),
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "mb-3" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.serial_number,
-                expression: "serial_number",
-              },
-            ],
-            staticClass: "form-control",
-            attrs: { type: "text", placeholder: "Введите серийный номер" },
-            domProps: { value: _vm.serial_number },
-            on: {
-              input: function ($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.serial_number = $event.target.value
-              },
-            },
+              : _vm._e()
           }),
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "mb-3" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.note,
-                expression: "note",
+          _vm._v(" "),
+          _c("div", { staticClass: "mb-3" }, [
+            _c("input", {
+              staticClass: "btn btn-primary",
+              attrs: {
+                disabled: !_vm.isDisabled,
+                type: "submit",
+                value: "Добавить",
               },
-            ],
-            staticClass: "form-control",
-            attrs: { type: "text", placeholder: "Примечание" },
-            domProps: { value: _vm.note },
-            on: {
-              input: function ($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.note = $event.target.value
+              on: {
+                click: function ($event) {
+                  $event.preventDefault()
+                  return _vm.store.apply(null, arguments)
+                },
               },
-            },
-          }),
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "mb-3" }, [
-          _c("input", {
-            staticClass: "btn btn-primary",
-            attrs: {
-              disabled: !_vm.isDisabled,
-              type: "submit",
-              value: "Добавить",
-            },
-            on: {
-              click: function ($event) {
-                $event.preventDefault()
-                return _vm.store.apply(null, arguments)
+            }),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "container" }, [
+            _c("input", {
+              attrs: { type: "file" },
+              on: { change: _vm.onChange },
+            }),
+            _vm._v(" "),
+            _c("input", {
+              attrs: { type: "submit", value: "Загрузить Json" },
+              on: {
+                click: function ($event) {
+                  $event.preventDefault()
+                  return _vm.upload.apply(null, arguments)
+                },
               },
-            },
-          }),
-        ]),
-      ]),
+            }),
+          ]),
+        ],
+        2
+      ),
     ]),
   ])
 }

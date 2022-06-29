@@ -14,6 +14,7 @@ use App\Http\Controllers\Equipment\PaginateEquipmentTypeController;
 use App\Http\Controllers\Equipment\SearchEquipmentTypeController;
 use App\Http\Controllers\Equipment\SearchSNController;
 use App\Http\Controllers\Equipment\SearchNoteController;
+use App\Http\Controllers\Equipment\UploadJsonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,7 @@ Route::group(['namespace' => '\App\Http\Controllers\Equipment'], function () {
     Route::get('/equipment-type/search/{data}', SearchEquipmentTypeController::class);
     Route::get('/equipment/search/{data}', SearchSNController::class);
     Route::get('/equipment/note/search/{data}', SearchNoteController::class);
+    Route::post('/equipment/upload', UploadJsonController::class);
 
 });
 

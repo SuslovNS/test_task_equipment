@@ -27,12 +27,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CreateTypeEquipment",
   data: function data() {
     return {
       name: null,
-      mask: null
+      mask: null,
+      errors: []
     };
   },
   methods: {
@@ -46,6 +54,9 @@ __webpack_require__.r(__webpack_exports__);
         _this.$router.push({
           name: 'show.equipment.type'
         });
+      })["catch"](function (error) {
+        _this.errors = error.response.data.errors.mask;
+        console.log(errors);
       });
     }
   },
@@ -142,74 +153,102 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "w-25" }, [
-      _c("div", { staticClass: "mb-3" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.name,
-              expression: "name",
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "w-25" }, [
+        _c("div", { staticClass: "mb-3" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.name,
+                expression: "name",
+              },
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text", placeholder: "Имя" },
+            domProps: { value: _vm.name },
+            on: {
+              input: function ($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.name = $event.target.value
+              },
             },
-          ],
-          staticClass: "form-control",
-          attrs: { type: "text", placeholder: "Имя" },
-          domProps: { value: _vm.name },
-          on: {
-            input: function ($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.name = $event.target.value
+          }),
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mb-3" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.mask,
+                expression: "mask",
+              },
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text", placeholder: "Маска серийного номера" },
+            domProps: { value: _vm.mask },
+            on: {
+              input: function ($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.mask = $event.target.value
+              },
             },
-          },
-        }),
+          }),
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mb-3" }, [
+          _c("input", {
+            staticClass: "btn btn-primary",
+            attrs: {
+              disabled: !_vm.isDisabled,
+              type: "submit",
+              value: "Добавить",
+            },
+            on: {
+              click: function ($event) {
+                $event.preventDefault()
+                return _vm.store.apply(null, arguments)
+              },
+            },
+          }),
+        ]),
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "mb-3" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.mask,
-              expression: "mask",
-            },
-          ],
-          staticClass: "form-control",
-          attrs: { type: "text", placeholder: "Маска серийного номера" },
-          domProps: { value: _vm.mask },
-          on: {
-            input: function ($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.mask = $event.target.value
-            },
-          },
-        }),
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "mb-3" }, [
-        _c("input", {
-          staticClass: "btn btn-primary",
-          attrs: {
-            disabled: !_vm.isDisabled,
-            type: "submit",
-            value: "Добавить",
-          },
-          on: {
-            click: function ($event) {
-              $event.preventDefault()
-              return _vm.store.apply(null, arguments)
-            },
-          },
-        }),
-      ]),
-    ]),
-  ])
+      _vm._l(_vm.errors, function (error) {
+        return _vm.errors
+          ? _c("div", [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "m-alert m-alert--outline alert-danger alert-dismissible",
+                  attrs: { role: "alert" },
+                },
+                [
+                  _c("span", [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(error) +
+                        "\n                    "
+                    ),
+                  ]),
+                ]
+              ),
+            ])
+          : _vm._e()
+      }),
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

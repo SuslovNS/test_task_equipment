@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 });*/
 
 Auth::routes();
+//Route::get('/test', \App\Http\Controllers\TestController::class);
 
 Route::get('/{page}', \App\Http\Controllers\IndexController::class)->where('page', '.*');
 
